@@ -1,0 +1,13 @@
+= AMPnet Headless Cms Service API Documentation
+Version {version}, {date}
+:doctype: book
+:toc: left
+:sectnums:
+:toclevels: 2
+:source-highlighter: prettify
+:docinfo: shared
+:icons: font
+
+== Introduction
+This document contains generated documentation for `AMPnet headless cms service`.
+Source code is available on https://github.com/AMPnet/headless-cms[Github].
