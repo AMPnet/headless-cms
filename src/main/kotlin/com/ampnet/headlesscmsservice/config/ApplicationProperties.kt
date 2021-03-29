@@ -12,10 +12,4 @@ class ApplicationProperties {
 @Suppress("MagicNumber")
 class JwtProperties {
     lateinit var publicKey: String
-    lateinit var privateKey: String
-    var accessTokenValidityInMinutes: Long = 60 * 24
-    var refreshTokenValidityInMinutes: Long = 60 * 24 * 90
-
-    fun accessTokenValidityInMilliseconds(): Long = accessTokenValidityInMinutes * 60 * 1000
-    fun refreshTokenValidityInMilliseconds(): Long = refreshTokenValidityInMinutes * 60 * 1000
 }

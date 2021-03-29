@@ -31,7 +31,7 @@ const val COOP = "ampnet-test"
 
 @ExtendWith(value = [SpringExtension::class, RestDocumentationExtension::class])
 @SpringBootTest
-class ControllerTestBase : TestBase() {
+abstract class ControllerTestBase : TestBase() {
 
     @Autowired
     protected lateinit var objectMapper: ObjectMapper

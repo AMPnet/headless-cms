@@ -1,4 +1,4 @@
-package com.ampnet.headlesscmsservice.config
+package com.ampnet.headlesscmsservice.controller
 
 import com.ampnet.headlesscmsservice.enums.Lang
 import com.ampnet.headlesscmsservice.enums.MailType

@@ -9,6 +9,7 @@ import com.ampnet.headlesscmsservice.service.pojo.MailResponse
 import com.ampnet.headlesscmsservice.service.pojo.MailUpdateServiceRequest
 import mu.KLogging
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
@@ -27,17 +28,23 @@ class MailController(private val mailService: MailService) {
         @RequestParam(required = false) type: MailType?,
         @RequestParam(required = false) lang: Lang?
     ): ResponseEntity<MailListResponse> {
+        logger.debug {
+            "Received request to get ${type ?: "all mails"} " +
+                "in ${lang ?: "all languages"} for coop: $coop"
+        }
         val mail = mailService.findByCoop(coop, type, lang)
         return ResponseEntity.ok(mail)
     }
 
     @PutMapping("/mail/{coop}/{type}/{lang}")
+    @PreAuthorize("hasAuthority(T(com.ampnet.service.enums.PrivilegeType).PWA_COOP)")
     fun updateMail(
         @PathVariable coop: String,
         @PathVariable type: MailType,
         @PathVariable lang: Lang,
         @RequestBody request: MailUpdateRequest
     ): ResponseEntity<MailResponse> {
+        logger.debug { "Received request to update $type in $lang for coop: $coop" }
         val serviceRequest = MailUpdateServiceRequest(
             coop, type, lang, request.title, request.content
         )
