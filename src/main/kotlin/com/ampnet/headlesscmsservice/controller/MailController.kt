@@ -37,7 +37,7 @@ class MailController(private val mailService: MailService) {
     }
 
     @PutMapping("/mail/{coop}/{type}/{lang}")
-    @PreAuthorize("hasAuthority(T(com.ampnet.service.enums.PrivilegeType).PWA_COOP)")
+    @PreAuthorize("hasAuthority(T(com.ampnet.headlesscmsservice.enums.PrivilegeType).PWA_COOP)")
     fun updateMail(
         @PathVariable coop: String,
         @PathVariable type: MailType,
