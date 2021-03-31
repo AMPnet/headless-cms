@@ -51,7 +51,7 @@ class MailController(private val mailService: MailService) {
         if (userPrincipal.coop != coop)
             throw InvalidRequestException(
                 ErrorCode.USER_MISSING_PRIVILEGE,
-                "${userPrincipal.uuid} is not a memeber of this coop: $coop"
+                "${userPrincipal.uuid} is not a member of this coop: $coop"
             )
         val serviceRequest = MailUpdateServiceRequest(
             coop, type, lang, request.title, request.content

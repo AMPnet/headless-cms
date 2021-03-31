@@ -5,7 +5,8 @@ import com.ampnet.headlesscmsservice.enums.MailFieldName
 import com.ampnet.headlesscmsservice.enums.MailType
 import com.ampnet.headlesscmsservice.exception.ErrorCode
 import com.ampnet.headlesscmsservice.exception.InvalidRequestException
-import com.ampnet.headlesscmsservice.exception.ResourceNotFoundException
+import com.ampnet.headlesscmsservice.persistence.model.Mail
+import com.ampnet.headlesscmsservice.persistence.model.MailId
 import com.ampnet.headlesscmsservice.persistence.respository.MailRepository
 import com.ampnet.headlesscmsservice.service.MailService
 import com.ampnet.headlesscmsservice.service.TranslationService
@@ -14,7 +15,7 @@ import com.ampnet.headlesscmsservice.service.pojo.MailResponse
 import com.ampnet.headlesscmsservice.service.pojo.MailTypeAndLang
 import com.ampnet.headlesscmsservice.service.pojo.MailUpdateServiceRequest
 import org.springframework.stereotype.Service
-import java.util.UUID
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class MailServiceImpl(
@@ -22,6 +23,16 @@ class MailServiceImpl(
     private val translationService: TranslationService
 ) : MailService {
 
+    /**
+     * Returns a list of mail responses for given coop by mail type and language.
+     * If the mail is not defined, returns default value...
+     *
+     * @param coop String identifier of the cooperative
+     * @param type optional [MailType]
+     * @param lang optional [Lang]
+     * @return a list of [MailResponse]
+     */
+    @Transactional(readOnly = true)
     override fun findByCoop(coop: String, type: MailType?, lang: Lang?): MailListResponse {
         val customMails = mailRepository.findByCoopAndOptionalTypeAndOptionalLang(coop, type, lang)
             .map { MailResponse(it) }
@@ -32,25 +43,31 @@ class MailServiceImpl(
             }
             (type == null && lang != null) -> getAllMailsByLanguage(customMails, coop, lang)
             (type != null && lang == null) -> getAllMailsByType(customMails, coop, type)
-            else -> getAllMailsByTypeAndLanguage(customMails, coop)
+            else -> getAllMails(customMails, coop)
         }
     }
 
+    @Transactional
     override fun updateMail(request: MailUpdateServiceRequest): MailResponse {
+        validateMailUpdateHasRequiredFields(request.content, request.type.getRequiredFields())
         val mail = mailRepository.findByCoopAndOptionalTypeAndOptionalLang(
             request.coop, request.type, request.lang
-        ).firstOrNull() ?: throw ResourceNotFoundException(
-            ErrorCode.CMS_MAIL_MISSING,
-            "${request.type} in ${request.lang} for coop: ${request.coop} is missing"
-        )
-        validateMailUpdateHasRequiredFields(request.content, request.type.getRequiredFields())
+        ).firstOrNull() ?: run {
+            val mail = mailRepository.save(
+                Mail(
+                    MailId(request.coop, request.type, request.lang).hashCode(),
+                    request.title, request.content, request.coop, request.type, request.lang
+                )
+            )
+            return MailResponse(mail)
+        }
         mail.title = request.title
         mail.content = request.content
         return MailResponse(mail)
     }
 
     private fun validateMailUpdateHasRequiredFields(mailContent: String, requiredFields: List<MailFieldName>) {
-        val missingFields = requiredFields.filterNot { mailContent.contains(it.value, false) }
+        val missingFields = requiredFields.filterNot { mailContent.contains(it.value) }
         if (missingFields.isNotEmpty()) throw InvalidRequestException(
             ErrorCode.CMS_REQUIRED_FIELD_MISSING,
             "Required fields are missing: ${ missingFields.joinToString() }"
@@ -64,7 +81,8 @@ class MailServiceImpl(
         val content = translationService.getTranslation(typeAndLang.mailType.defaultTemplateKey, typeAndLang.lang)
         val title = translationService.getTranslation(typeAndLang.mailType.defaultTitleKey, typeAndLang.lang)
         return MailResponse(
-            UUID.randomUUID(), coop, title, content, typeAndLang.mailType,
+            MailId(coop, typeAndLang.mailType, typeAndLang.lang).hashCode(),
+            coop, title, content, typeAndLang.mailType,
             typeAndLang.mailType.getRequiredFields().map { it.value }, typeAndLang.lang
         )
     }
@@ -97,7 +115,7 @@ class MailServiceImpl(
         return MailListResponse(mailByLanguages.values.toList())
     }
 
-    private fun getAllMailsByTypeAndLanguage(
+    private fun getAllMails(
         customMails: List<MailResponse>,
         coop: String
     ): MailListResponse {

@@ -1,6 +1,7 @@
 package com.ampnet.headlesscmsservice.service.impl
 
 import com.ampnet.headlesscmsservice.enums.Lang
+import com.ampnet.headlesscmsservice.enums.name
 import com.ampnet.headlesscmsservice.exception.ErrorCode
 import com.ampnet.headlesscmsservice.exception.InternalException
 import com.ampnet.headlesscmsservice.service.TranslationService
@@ -23,7 +24,7 @@ class TranslationServiceImpl(
     }
 
     override fun getTranslation(key: String, lang: Lang): String =
-        translations[key]?.get(lang.name.toLowerCase()) ?: translations[key]?.get(Lang.EN.name.toLowerCase())
+        translations[key]?.get(lang.name()) ?: translations[key]?.get(Lang.EN.name())
             ?: throw InternalException(
                 ErrorCode.INT_CMS_DEFAULT_MAIL,
                 "Could not find default[en] translation for $key"

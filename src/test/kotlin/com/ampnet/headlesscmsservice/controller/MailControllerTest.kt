@@ -4,6 +4,7 @@ import com.ampnet.headlesscmsservice.enums.Lang
 import com.ampnet.headlesscmsservice.enums.MailType
 import com.ampnet.headlesscmsservice.exception.ErrorCode
 import com.ampnet.headlesscmsservice.persistence.model.Mail
+import com.ampnet.headlesscmsservice.persistence.model.MailId
 import com.ampnet.headlesscmsservice.service.pojo.MailListResponse
 import com.ampnet.headlesscmsservice.service.pojo.MailResponse
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.util.UUID
 
 class MailControllerTest : ControllerTestBase() {
 
@@ -27,6 +27,8 @@ class MailControllerTest : ControllerTestBase() {
 
     private val invitationMailContent = "<p>You {{organization}} </p>\n\n<p>To review invite, " +
         "please follow the link: <a href=\"{{& link}}\">{{& link}}</a></p>"
+    private val resetPasswordMailContent = "<p>To set new password, please follow the link: <a href=\"{{& link}}\">{{& link}}</a> " +
+        "</p>\n<p>If you did not request a change of password, ignore this mail.</p>"
 
     @BeforeEach
     fun init() {
@@ -62,6 +64,60 @@ class MailControllerTest : ControllerTestBase() {
                 testContext.mail.type.getRequiredFields().map { it.value }
             )
             assertThat(mail.lang).isEqualTo(testContext.mail.lang)
+        }
+    }
+
+    @Test
+    fun mustGetAllMailsByLanguage() {
+        verify("Controller will return all mails by language") {
+            val result = mockMvc.perform(
+                get("/mail/$COOP")
+                    .param("lang", Lang.EN.toString())
+            )
+                .andExpect(status().isOk)
+                .andReturn()
+            val response: MailListResponse = objectMapper.readValue(result.response.contentAsString)
+            assertThat(response.mails).hasSize(MailType.values().size)
+        }
+    }
+
+    @Test
+    fun mustGetCustomMailsAndDefaultValues() {
+        suppose("There are two custom mails") {
+            val invitationMail = createMail(
+                "Invitation", invitationMailContent, MailType.INVITATION_MAIL, Lang.EN, COOP
+            )
+            val resetPasswordMail = createMail(
+                "Reset password", resetPasswordMailContent, MailType.RESET_PASSWORD_MAIL, Lang.EN, COOP
+            )
+            testContext.mails = listOf(invitationMail, resetPasswordMail)
+        }
+        verify("Controller will return mail mails by language") {
+            val result = mockMvc.perform(
+                get("/mail/$COOP")
+                    .param("lang", Lang.EN.toString())
+            )
+                .andExpect(status().isOk)
+                .andReturn()
+            val response: MailListResponse = objectMapper.readValue(result.response.contentAsString)
+            val mails = response.mails.associateBy { it.type }
+            assertThat(mails).hasSize(MailType.values().size)
+            assertThat(mails[MailType.INVITATION_MAIL]?.content).isEqualTo(testContext.mails.first().content)
+            assertThat(mails[MailType.RESET_PASSWORD_MAIL]?.content).isEqualTo(testContext.mails.last().content)
+        }
+    }
+
+    @Test
+    fun mustGetAllEmailTranslationsByType() {
+        verify("Controller will return mail all mails by language") {
+            val result = mockMvc.perform(
+                get("/mail/$COOP")
+                    .param("type", MailType.INVITATION_MAIL.toString())
+            )
+                .andExpect(status().isOk)
+                .andReturn()
+            val response: MailListResponse = objectMapper.readValue(result.response.contentAsString)
+            assertThat(response.mails).hasSize(Lang.values().size)
         }
     }
 
@@ -120,12 +176,13 @@ class MailControllerTest : ControllerTestBase() {
         val content = translations[mailType.defaultTemplateKey]?.get(lang.name.toLowerCase()) ?: fail("no default content")
         val title = translations[mailType.defaultTitleKey]?.get(lang.name.toLowerCase()) ?: fail("no default title")
         return MailResponse(
-            UUID.randomUUID(), coop, title, content, mailType,
+            MailId(coop, mailType, lang).hashCode(), coop, title, content, mailType,
             mailType.getRequiredFields().map { it.value }, lang
         )
     }
 
     private class TestContext {
         lateinit var mail: Mail
+        lateinit var mails: List<Mail>
     }
 }

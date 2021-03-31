@@ -3,10 +3,10 @@ package com.ampnet.headlesscmsservice.service.pojo
 import com.ampnet.headlesscmsservice.enums.Lang
 import com.ampnet.headlesscmsservice.enums.MailType
 import com.ampnet.headlesscmsservice.persistence.model.Mail
-import java.util.UUID
 
+// TOD add ID
 data class MailResponse(
-    val id: UUID,
+    val id: Int,
     val coop: String,
     val title: String,
     val content: String,

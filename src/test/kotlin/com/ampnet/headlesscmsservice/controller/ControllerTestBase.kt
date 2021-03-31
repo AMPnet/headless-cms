@@ -7,6 +7,7 @@ import com.ampnet.headlesscmsservice.enums.MailType
 import com.ampnet.headlesscmsservice.exception.ErrorCode
 import com.ampnet.headlesscmsservice.exception.ErrorResponse
 import com.ampnet.headlesscmsservice.persistence.model.Mail
+import com.ampnet.headlesscmsservice.persistence.model.MailId
 import com.ampnet.headlesscmsservice.persistence.respository.MailRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -25,7 +26,6 @@ import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
-import java.util.UUID
 
 const val COOP = "ampnet-test"
 
@@ -76,7 +76,7 @@ abstract class ControllerTestBase : TestBase() {
         lang: Lang,
         coop: String = COOP
     ): Mail {
-        val mail = Mail(UUID.randomUUID(), coop, title, content, type, lang)
+        val mail = Mail(MailId(coop, type, lang).hashCode(), title, content, coop, type, lang)
         return mailRepository.save(mail)
     }
 }

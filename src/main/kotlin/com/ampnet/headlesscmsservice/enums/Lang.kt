@@ -8,3 +8,5 @@ enum class Lang {
     IT,
     FR
 }
+
+fun Lang.name() = this.name.toLowerCase()
