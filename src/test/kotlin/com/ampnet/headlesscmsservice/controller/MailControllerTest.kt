@@ -4,7 +4,6 @@ import com.ampnet.headlesscmsservice.enums.Lang
 import com.ampnet.headlesscmsservice.enums.MailType
 import com.ampnet.headlesscmsservice.exception.ErrorCode
 import com.ampnet.headlesscmsservice.persistence.model.Mail
-import com.ampnet.headlesscmsservice.persistence.model.MailId
 import com.ampnet.headlesscmsservice.service.pojo.MailListResponse
 import com.ampnet.headlesscmsservice.service.pojo.MailResponse
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -175,10 +174,7 @@ class MailControllerTest : ControllerTestBase() {
     private fun getDefaultMail(mailType: MailType, lang: Lang, coop: String): MailResponse {
         val content = translations[mailType.defaultTemplateKey]?.get(lang.name.toLowerCase()) ?: fail("no default content")
         val title = translations[mailType.defaultTitleKey]?.get(lang.name.toLowerCase()) ?: fail("no default title")
-        return MailResponse(
-            MailId(coop, mailType, lang).hashCode(), coop, title, content, mailType,
-            mailType.getRequiredFields().map { it.value }, lang
-        )
+        return MailResponse(coop, title, content, mailType, lang)
     }
 
     private class TestContext {

@@ -3,8 +3,8 @@ package com.ampnet.headlesscmsservice.service.pojo
 import com.ampnet.headlesscmsservice.enums.Lang
 import com.ampnet.headlesscmsservice.enums.MailType
 import com.ampnet.headlesscmsservice.persistence.model.Mail
+import com.ampnet.headlesscmsservice.persistence.model.MailId
 
-// TOD add ID
 data class MailResponse(
     val id: Int,
     val coop: String,
@@ -22,6 +22,18 @@ data class MailResponse(
         mail.type,
         mail.type.getRequiredFields().map { it.value },
         mail.lang,
+    )
+
+    constructor(
+        coop: String,
+        title: String,
+        content: String,
+        type: MailType,
+        lang: Lang
+    ) : this(
+        MailId(coop, type, lang).hashCode(),
+        coop, title, content, type,
+        type.getRequiredFields().map { it.value }, lang
     )
 }
 

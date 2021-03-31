@@ -33,29 +33,24 @@ class Mail(
     @Enumerated(EnumType.STRING)
     @Column(name = "lang", nullable = false)
     val lang: Lang
-)
-
-class MailId(
-    val coop: String,
-    var type: MailType,
-    var lang: Lang
 ) {
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-        other as MailId
-        if (
-            coop != other.coop ||
-            type != other.type ||
-            lang != other.lang
-        ) return false
-        return true
-    }
-
-    override fun hashCode(): Int =
-        coop.hashCode() + type.hashCode() + lang.hashCode()
+    constructor(
+        title: String,
+        content: String,
+        coop: String,
+        type: MailType,
+        lang: Lang
+    ) : this(
+        MailId(coop, type, lang).hashCode(),
+        title, content, coop, type, lang
+    )
 }
+
+data class MailId(
+    val coop: String,
+    val type: MailType,
+    val lang: Lang
+)
 
 @Converter(autoApply = true)
 class MailTypeConverter : AttributeConverter<MailType, Int> {
