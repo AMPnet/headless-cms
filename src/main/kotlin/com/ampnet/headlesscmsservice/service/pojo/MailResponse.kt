@@ -21,7 +21,7 @@ data class MailResponse(
         mail.content,
         mail.type,
         mail.type.getRequiredFields().map { it.value },
-        mail.lang
+        mail.lang,
     )
 }
 

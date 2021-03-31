@@ -17,5 +17,3 @@ enum class PrivilegeType {
     // Coop
     PWA_COOP
 }
-
-

@@ -3,6 +3,8 @@ package com.ampnet.headlesscmsservice.controller
 import com.ampnet.headlesscmsservice.controller.pojo.MailUpdateRequest
 import com.ampnet.headlesscmsservice.enums.Lang
 import com.ampnet.headlesscmsservice.enums.MailType
+import com.ampnet.headlesscmsservice.exception.ErrorCode
+import com.ampnet.headlesscmsservice.exception.InvalidRequestException
 import com.ampnet.headlesscmsservice.service.MailService
 import com.ampnet.headlesscmsservice.service.pojo.MailListResponse
 import com.ampnet.headlesscmsservice.service.pojo.MailResponse
@@ -45,6 +47,12 @@ class MailController(private val mailService: MailService) {
         @RequestBody request: MailUpdateRequest
     ): ResponseEntity<MailResponse> {
         logger.debug { "Received request to update $type in $lang for coop: $coop" }
+        val userPrincipal = ControllerUtils.getUserPrincipalFromSecurityContext()
+        if (userPrincipal.coop != coop)
+            throw InvalidRequestException(
+                ErrorCode.USER_MISSING_PRIVILEGE,
+                "${userPrincipal.uuid} is not a memeber of this coop: $coop"
+            )
         val serviceRequest = MailUpdateServiceRequest(
             coop, type, lang, request.title, request.content
         )

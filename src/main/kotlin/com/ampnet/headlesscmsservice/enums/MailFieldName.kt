@@ -3,5 +3,11 @@ package com.ampnet.headlesscmsservice.enums
 enum class MailFieldName(val value: String) {
 
     ORGANIZATION("{{organization}}"),
-    LINK("{{& link}}");
+    LINK("{{& link}}"),
+    ACTIVATION_DATA("{{activationData}}"),
+    PROJECT_NAME("{{projectName}}"),
+    AMOUNT("{{amount}}"),
+    FAILED_RECIPIENTS("{{failedRecipients}}"),
+    FIRST_NAME("{{firstName}}"),
+    PROJECT_DESCRIPTION("{{projectDescription}}");
 }

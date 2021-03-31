@@ -8,3 +8,5 @@ class InvalidRequestException(
 ) : Exception(exceptionMessage, throwable)
 
 class ResourceNotFoundException(val errorCode: ErrorCode, exceptionMessage: String) : Exception(exceptionMessage)
+
+class InternalException(val errorCode: ErrorCode, exceptionMessage: String) : Exception(exceptionMessage)

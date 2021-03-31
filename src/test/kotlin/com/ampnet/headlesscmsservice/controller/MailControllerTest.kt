@@ -5,21 +5,28 @@ import com.ampnet.headlesscmsservice.enums.MailType
 import com.ampnet.headlesscmsservice.exception.ErrorCode
 import com.ampnet.headlesscmsservice.persistence.model.Mail
 import com.ampnet.headlesscmsservice.service.pojo.MailListResponse
+import com.ampnet.headlesscmsservice.service.pojo.MailResponse
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.util.UUID
 
 class MailControllerTest : ControllerTestBase() {
+
+    private val translations by lazy {
+        val json = javaClass.classLoader.getResource("mail_translations.json")?.readText()
+            ?: fail("Failed to load mail_translations.json")
+        objectMapper.readValue<Map<String, Map<String, String>>>(json)
+    }
 
     private lateinit var testContext: TestContext
 
     private val invitationMailContent = "<p>You {{organization}} </p>\n\n<p>To review invite, " +
         "please follow the link: <a href=\"{{& link}}\">{{& link}}</a></p>"
-    private val mailConfirmationContent = "<h2>Please confirmation your email</h2>\n\n<p>Follow the " +
-        "link the confirm your email: <a href=\"{{& link}}\">{{& link}}</a></p>"
 
     @BeforeEach
     fun init() {
@@ -31,7 +38,7 @@ class MailControllerTest : ControllerTestBase() {
     fun mustBeAbleToGetMail() {
         suppose("Email exists") {
             testContext.mail = createMail(
-                "Invitation", invitationMailContent, MailType.INVITATION_MAIL, Lang.ENG
+                "Invitation", invitationMailContent, MailType.INVITATION_MAIL, Lang.EN
             )
         }
 
@@ -39,7 +46,7 @@ class MailControllerTest : ControllerTestBase() {
             val result = mockMvc.perform(
                 get("/mail/$COOP")
                     .param("type", MailType.INVITATION_MAIL.toString())
-                    .param("lang", Lang.ENG.toString())
+                    .param("lang", Lang.EN.toString())
             )
                 .andExpect(status().isOk)
                 .andReturn()
@@ -59,25 +66,27 @@ class MailControllerTest : ControllerTestBase() {
     }
 
     @Test
-    fun mustBeAbleToGetAllMailsForCoop() {
-        suppose("Emails exists") {
-            val invitationMail = createMail(
-                "Invitation", invitationMailContent, MailType.INVITATION_MAIL, Lang.ENG
-            )
-            val confirmationMail = createMail(
-                "Invitation", mailConfirmationContent, MailType.MAIL_CONFIRMATION_MAIL, Lang.ENG
-            )
-            testContext.mails = listOf(invitationMail, confirmationMail)
-        }
-
-        verify("Controller will return all mails for coop") {
+    fun mustBeAbleToGetDefaultEmail() {
+        verify("Controller will return default email") {
             val result = mockMvc.perform(
                 get("/mail/$COOP")
+                    .param("type", MailType.INVITATION_MAIL.toString())
+                    .param("lang", Lang.EN.toString())
             )
                 .andExpect(status().isOk)
                 .andReturn()
             val response: MailListResponse = objectMapper.readValue(result.response.contentAsString)
-            assertThat(response.mails).hasSize(2)
+            assertThat(response.mails).hasSize(1)
+            val mail = response.mails.first()
+            val defaultInvitationMail = getDefaultMail(MailType.INVITATION_MAIL, Lang.EN, COOP)
+            assertThat(mail.coop).isEqualTo(defaultInvitationMail.coop)
+            assertThat(mail.title).isEqualTo(defaultInvitationMail.title)
+            assertThat(mail.content).isEqualTo(defaultInvitationMail.content)
+            assertThat(mail.type).isEqualTo(defaultInvitationMail.type)
+            assertThat(mail.requiredFields).isEqualTo(
+                defaultInvitationMail.type.getRequiredFields().map { it.value }
+            )
+            assertThat(mail.lang).isEqualTo(defaultInvitationMail.lang)
         }
     }
 
@@ -107,8 +116,16 @@ class MailControllerTest : ControllerTestBase() {
         }
     }
 
+    private fun getDefaultMail(mailType: MailType, lang: Lang, coop: String): MailResponse {
+        val content = translations[mailType.defaultTemplateKey]?.get(lang.name.toLowerCase()) ?: fail("no default content")
+        val title = translations[mailType.defaultTitleKey]?.get(lang.name.toLowerCase()) ?: fail("no default title")
+        return MailResponse(
+            UUID.randomUUID(), coop, title, content, mailType,
+            mailType.getRequiredFields().map { it.value }, lang
+        )
+    }
+
     private class TestContext {
         lateinit var mail: Mail
-        lateinit var mails: List<Mail>
     }
 }

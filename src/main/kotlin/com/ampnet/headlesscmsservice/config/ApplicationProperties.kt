@@ -9,7 +9,6 @@ class ApplicationProperties {
     val jwt: JwtProperties = JwtProperties()
 }
 
-@Suppress("MagicNumber")
 class JwtProperties {
     lateinit var publicKey: String
 }

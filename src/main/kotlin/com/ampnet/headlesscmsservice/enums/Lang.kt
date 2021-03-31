@@ -1,7 +1,7 @@
 package com.ampnet.headlesscmsservice.enums
 
 enum class Lang {
-    ENG,
+    EN,
     ES,
     EL,
     DE,
