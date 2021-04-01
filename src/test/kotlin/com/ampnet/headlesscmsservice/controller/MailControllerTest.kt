@@ -1,9 +1,12 @@
 package com.ampnet.headlesscmsservice.controller
 
+import com.ampnet.headlesscmsservice.controller.pojo.MailUpdateRequest
 import com.ampnet.headlesscmsservice.enums.Lang
 import com.ampnet.headlesscmsservice.enums.MailType
 import com.ampnet.headlesscmsservice.exception.ErrorCode
 import com.ampnet.headlesscmsservice.persistence.model.Mail
+import com.ampnet.headlesscmsservice.persistence.model.MailId
+import com.ampnet.headlesscmsservice.security.WithMockCrowdfundUser
 import com.ampnet.headlesscmsservice.service.pojo.MailListResponse
 import com.ampnet.headlesscmsservice.service.pojo.MailResponse
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -11,7 +14,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 class MailControllerTest : ControllerTestBase() {
@@ -91,7 +96,8 @@ class MailControllerTest : ControllerTestBase() {
             )
             testContext.mails = listOf(invitationMail, resetPasswordMail)
         }
-        verify("Controller will return mail mails by language") {
+
+        verify("Controller will return mails by language") {
             val result = mockMvc.perform(
                 get("/mail/$COOP")
                     .param("lang", Lang.EN.toString())
@@ -103,6 +109,13 @@ class MailControllerTest : ControllerTestBase() {
             assertThat(mails).hasSize(MailType.values().size)
             assertThat(mails[MailType.INVITATION_MAIL]?.content).isEqualTo(testContext.mails.first().content)
             assertThat(mails[MailType.RESET_PASSWORD_MAIL]?.content).isEqualTo(testContext.mails.last().content)
+            mails.forEach { (type, mail) ->
+                if (type == MailType.INVITATION_MAIL || type == MailType.RESET_PASSWORD_MAIL) {
+                    assertThat(mail.id).isNotNull
+                } else {
+                    assertThat(mail.id).isNull()
+                }
+            }
         }
     }
 
@@ -134,6 +147,7 @@ class MailControllerTest : ControllerTestBase() {
             assertThat(response.mails).hasSize(1)
             val mail = response.mails.first()
             val defaultInvitationMail = getDefaultMail(MailType.INVITATION_MAIL, Lang.EN, COOP)
+            assertThat(mail.id).isNull()
             assertThat(mail.coop).isEqualTo(defaultInvitationMail.coop)
             assertThat(mail.title).isEqualTo(defaultInvitationMail.title)
             assertThat(mail.content).isEqualTo(defaultInvitationMail.content)
@@ -171,10 +185,60 @@ class MailControllerTest : ControllerTestBase() {
         }
     }
 
+    @Test
+    @WithMockCrowdfundUser
+    fun mustBeAbleUpdateMail() {
+        val request = MailUpdateRequest("Invitation New Title", invitationMailContent)
+        verify("Controller will return default email") {
+            val result = mockMvc.perform(
+                post("/mail/$COOP/${MailType.INVITATION_MAIL}/${Lang.EN}")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                .andExpect(status().isOk)
+                .andReturn()
+            val response: MailResponse = objectMapper.readValue(result.response.contentAsString)
+            assertThat(response.id).isEqualTo(MailId(COOP, MailType.INVITATION_MAIL, Lang.EN).hashCode())
+            assertThat(response.coop).isEqualTo(COOP)
+            assertThat(response.title).isEqualTo(request.title)
+            assertThat(response.content).isEqualTo(request.content)
+            assertThat(response.type).isEqualTo(MailType.INVITATION_MAIL)
+            assertThat(response.requiredFields).isEqualTo(MailType.INVITATION_MAIL.getRequiredFields().map { it.value })
+            assertThat(response.lang).isEqualTo(Lang.EN)
+        }
+        verify("Mail is saved in the database") {
+            val updatedMail = mailRepository.findByCoopAndOptionalTypeAndOptionalLang(COOP, MailType.INVITATION_MAIL, Lang.EN).first()
+            assertThat(updatedMail.id).isEqualTo(MailId(COOP, MailType.INVITATION_MAIL, Lang.EN).hashCode())
+            assertThat(updatedMail.coop).isEqualTo(COOP)
+            assertThat(updatedMail.title).isEqualTo(request.title)
+            assertThat(updatedMail.content).isEqualTo(request.content)
+            assertThat(updatedMail.type).isEqualTo(MailType.INVITATION_MAIL)
+            assertThat(updatedMail.lang).isEqualTo(Lang.EN)
+        }
+    }
+
+    @Test
+    @WithMockCrowdfundUser(coop = "another-coop")
+    fun mustThrowExceptionIfAdminIsFromAnotherCoop() {
+        verify("Controller will throw exception for invalid language") {
+            val request = MailUpdateRequest("Invitation New Title", invitationMailContent)
+            verify("Controller will return default email") {
+                val result = mockMvc.perform(
+                    post("/mail/$COOP/${MailType.INVITATION_MAIL}/${Lang.EN}")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                    .andExpect(status().isBadRequest)
+                    .andReturn()
+                verifyResponseErrorCode(result, ErrorCode.USER_MISSING_PRIVILEGE)
+            }
+        }
+    }
+
     private fun getDefaultMail(mailType: MailType, lang: Lang, coop: String): MailResponse {
         val content = translations[mailType.defaultTemplateKey]?.get(lang.name.toLowerCase()) ?: fail("no default content")
         val title = translations[mailType.defaultTitleKey]?.get(lang.name.toLowerCase()) ?: fail("no default title")
-        return MailResponse(coop, title, content, mailType, lang)
+        return MailResponse(null, coop, title, content, mailType, mailType.getRequiredFields().map { it.value }, lang)
     }
 
     private class TestContext {

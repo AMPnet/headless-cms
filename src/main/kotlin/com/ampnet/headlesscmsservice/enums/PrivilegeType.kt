@@ -14,6 +14,35 @@ enum class PrivilegeType {
         - PWA - PERM_WRITE_ADMIN
      */
 
+    // Administration
+    MONITORING,
+
     // Coop
-    PWA_COOP
+    PWA_COOP,
+    PRA_COOP,
+
+    // Profile
+    PRO_PROFILE,
+    PWO_PROFILE,
+    PRA_PROFILE,
+    PWA_PROFILE,
+
+    // Organization
+    PRA_ORG,
+    PWA_ORG_APPROVE,
+    PRO_ORG_INVITE,
+    PWO_ORG_INVITE,
+
+    // Wallet
+    PRA_WALLET,
+    PWA_WALLET,
+    PWA_WALLET_TRANSFER,
+
+    // Withdraw
+    PRA_WITHDRAW,
+    PWA_WITHDRAW,
+
+    // Deposit
+    PRA_DEPOSIT,
+    PWA_DEPOSIT
 }

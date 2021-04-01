@@ -83,7 +83,10 @@ class MailServiceImpl(
     ): MailResponse {
         val content = translationService.getTranslation(typeAndLang.mailType.defaultTemplateKey, typeAndLang.lang)
         val title = translationService.getTranslation(typeAndLang.mailType.defaultTitleKey, typeAndLang.lang)
-        return MailResponse(coop, title, content, typeAndLang.mailType, typeAndLang.lang)
+        return MailResponse(
+            null, coop, title, content, typeAndLang.mailType,
+            typeAndLang.mailType.getRequiredFields().map { it.value }, typeAndLang.lang
+        )
     }
 
     private fun getAllMailsByLanguage(
