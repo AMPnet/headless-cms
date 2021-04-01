@@ -1,0 +1,8 @@
+CREATE TABLE mail (
+    id INT PRIMARY KEY,
+    coop VARCHAR NOT NULL,
+    lang VARCHAR NOT NULL,
+    type_id INT NOT NULL,
+    content VARCHAR NOT NULL,
+    title VARCHAR NOT NULL
+);

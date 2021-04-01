@@ -11,3 +11,29 @@ Version {version}, {date}
 == Introduction
 This document contains generated documentation for `AMPnet headless cms service`.
 Source code is available on https://github.com/AMPnet/headless-cms[Github].
+
+== Mail API
+
+=== Get Mail
+Query parameters `type` and `lang` are both optional.
+
+If `type` is not specified returns all mails by language.
+
+If `lang` is not specified returns mails in all languages.
+
+If both `type` and `lang` are not specified returns all mails in all languages.
+
+TIP: If default mail value is returned `id` is null.
+
+.Request
+include::{snippets}/MailControllerTest/mustBeAbleToGetMail/http-request.adoc[]
+.Response
+include::{snippets}/MailControllerTest/mustBeAbleToGetMail/http-response.adoc[]
+
+=== Update Mail
+Request needs header: `Authorization: Bearer JWT`.
+
+.Request
+include::{snippets}/MailControllerTest/mustBeAbleUpdateMail/http-request.adoc[]
+.Response
+include::{snippets}/MailControllerTest/mustBeAbleUpdateMail/http-response.adoc[]
