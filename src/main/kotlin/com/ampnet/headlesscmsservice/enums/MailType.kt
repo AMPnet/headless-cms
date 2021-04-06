@@ -31,45 +31,62 @@ enum class MailType(val id: Int, val defaultTemplateKey: String, val defaultTitl
             listOf(MailFieldName.LINK)
     },
     DEPOSIT_INFO_MAIL(5, "depositTemplate", "depositInfoTitle") {
-        // TODO think about different structure
+        override fun getRequiredFields(): List<MailFieldName> = listOf(MailFieldName.COOP, MailFieldName.LINK)
+    },
+    DEPOSIT_FAILED_INFO_MAIL(6, "depositFailedTemplate", "depositInfoTitle") {
         override fun getRequiredFields(): List<MailFieldName> = listOf()
     },
-    DEPOSIT_REQUEST_MAIL(6, "depositRequestTemplate", "depositInfoTitle") {
+    DEPOSIT_INFO_NO_PROJECT_TO_INVEST_MAIL(7, "depositNoProjectToInvestTemplate", "depositInfoTitle") {
+        override fun getRequiredFields(): List<MailFieldName> = listOf(MailFieldName.COOP)
+    },
+    DEPOSIT_REQUEST_MAIL(8, "depositRequestTemplate", "depositInfoTitle") {
         override fun getRequiredFields(): List<MailFieldName> = listOf(MailFieldName.AMOUNT)
     },
-    FAILED_DELIVERY_MAIL(7, "failedDeliveryMessageTemplate", "failedDeliveryTitle") {
+    FAILED_DELIVERY_MAIL(9, "failedDeliveryMessageTemplate", "failedDeliveryTitle") {
         override fun getRequiredFields(): List<MailFieldName> = listOf(MailFieldName.FAILED_RECIPIENTS)
     },
-    INVITATION_MAIL(8, "invitationTemplate", "invitationTitle") {
+    INVITATION_MAIL(10, "invitationTemplate", "invitationTitle") {
         override fun getRequiredFields(): List<MailFieldName> =
             listOf(MailFieldName.ORGANIZATION, MailFieldName.LINK)
     },
-    NEW_USER_WALLET_MAIL(9, "userWalletTemplate", "newWalletTitle") {
+    NEW_USER_WALLET_MAIL(11, "userWalletTemplate", "newWalletTitle") {
         override fun getRequiredFields(): List<MailFieldName> =
             listOf(MailFieldName.ORGANIZATION, MailFieldName.LINK)
     },
-    NEW_PROJECT_WALLET_MAIL(10, "projectWalletTemplate", "newWalletTitle") {
+    NEW_PROJECT_WALLET_MAIL(12, "projectWalletTemplate", "newWalletTitle") {
         override fun getRequiredFields(): List<MailFieldName> = listOf(MailFieldName.LINK)
     },
-    NEW_ORGANIZATION_WALLET_MAIL(11, "organizationWalletTemplate", "newWalletTitle") {
+    NEW_ORGANIZATION_WALLET_MAIL(13, "organizationWalletTemplate", "newWalletTitle") {
         override fun getRequiredFields(): List<MailFieldName> = listOf(MailFieldName.LINK)
     },
-    PROJECT_FULLY_FUNDED_MAIL(12, "projectFullyFundedTemplate", "projectFullyFundedTitle") {
+    PROJECT_FULLY_FUNDED_MAIL(14, "projectFullyFundedTemplate", "projectFullyFundedTitle") {
         override fun getRequiredFields(): List<MailFieldName> =
             listOf(MailFieldName.FIRST_NAME, MailFieldName.PROJECT_NAME, MailFieldName.LINK)
     },
-    RESET_PASSWORD_MAIL(13, "forgotPasswordTemplate", "resetPasswordTitle") {
+    RESET_PASSWORD_MAIL(15, "forgotPasswordTemplate", "resetPasswordTitle") {
         override fun getRequiredFields(): List<MailFieldName> = listOf(MailFieldName.LINK)
     },
-    SUCCESSFULLY_INVESTED_MAIL(14, "investmentTemplate", "investmentTitle") {
-        // TODO think about different structure
+    SUCCESSFULLY_INVESTED_MAIL(16, "investmentTemplate", "investmentTitle") {
+        override fun getRequiredFields(): List<MailFieldName> {
+            return listOf(
+                MailFieldName.AMOUNT, MailFieldName.PROJECT_NAME, MailFieldName.PROJECT_DESCRIPTION, MailFieldName.COOP
+            )
+        }
+    },
+    SUCCESSFULLY_INVESTED_WITHOUT_TOS_MAIL(17, "investmentWithoutTosTemplate", "investmentTitle") {
+        override fun getRequiredFields(): List<MailFieldName> {
+            return listOf(
+                MailFieldName.AMOUNT, MailFieldName.PROJECT_NAME, MailFieldName.PROJECT_DESCRIPTION, MailFieldName.COOP
+            )
+        }
+    },
+    WITHDRAW_INFO_MAIL(18, "withdrawTemplate", "withdrawTitle") {
         override fun getRequiredFields(): List<MailFieldName> = listOf()
     },
-    WITHDRAW_INFO_MAIL(15, "withdrawTemplate", "withdrawTitle") {
-        // TODO think about different structure
+    WITHDRAW_FAILED_INFO_MAIL(19, "withdrawFailedTemplate", "withdrawTitle") {
         override fun getRequiredFields(): List<MailFieldName> = listOf()
     },
-    WITHDRAW_REQUEST_MAIL(16, "withdrawRequestTemplate", "withdrawTitle") {
+    WITHDRAW_REQUEST_MAIL(20, "withdrawRequestTemplate", "withdrawTitle") {
         override fun getRequiredFields(): List<MailFieldName> = listOf(MailFieldName.AMOUNT)
     };
 

@@ -8,8 +8,15 @@
     "fr": "<p>Vous avez demandé un dépôt avec le montant: {{amount}}.</p>\n<p>Vous serez informé après le traitement de votre demande de dépôt.</p>"
   },
   "depositTemplate": {
-    "en": "{{#minted}}\n<p>Welcome to {{coop}}, we are very pleased you have joined us. Your deposit has been approved and funds are ready.</p>\n{{#hasProjectWhichCanReceiveInvestment}}\n<p>Why wait?</p>\n<p><a href=\"{{& link}}\">Take a look</a> at our amazing projects, businesses and ideas. They need your support! \nStart investing ethically, socially and safely today.</p>\n{{/hasProjectWhichCanReceiveInvestment}}\n<p>From the {{coop}} team.</p>\n{{/minted}}\n{{^minted}}\n<p>Your deposit request has been rejected. Try to create new deposit request or contact support for more information.</p>\n{{/minted}}",
-    "el": "{{#minted}}\n<p>Καλωσόρισες στην {{coop}}. Χαιρόμαστε πολύ που ολοκληρώθηκε η εγγραφή σου. Η κατάθεσή σου έχει εγκριθεί και τα χρήματά σου είναι στο εικονικό σου πορτοφόλι.</p>\n{{#hasProjectWhichCanReceiveInvestment}}\n<p>Μην περιμένεις άλλο!</p>\n<p><a href=\"{{& link}}\">Ρίξε μια ματιά</a> στα έργα και τις πρωτοποριακές ιδέες που φιλοξενούμε. Χρειάζονται την βοήθειά σου! \nΞεκίνησε σήμερα να επενδύεις υπεύθυνα και με ασφάλεια.</p>\n{{/hasProjectWhichCanReceiveInvestment}}\n<p>Απο την ομάδα της {{coop}}.</p>\n{{/minted}}\n{{^minted}}\n<p>Your deposit request has been rejected. Try to create new deposit request or contact support for more information.</p>\n{{/minted}}"
+    "en": "<p>Welcome to {{coop}}, we are very pleased you have joined us. Your deposit has been approved and funds are ready.</p>\n<p>Why wait?</p>\n<p><a href=\"{{& link}}\">Take a look</a> at our amazing projects, businesses and ideas. They need your support! \nStart investing ethically, socially and safely today.</p>\n<p>From the {{coop}} team.</p>",
+    "el": "<p>Καλωσόρισες στην {{coop}}. Χαιρόμαστε πολύ που ολοκληρώθηκε η εγγραφή σου. Η κατάθεσή σου έχει εγκριθεί και τα χρήματά σου είναι στο εικονικό σου πορτοφόλι.</p>\n<p>Μην περιμένεις άλλο!</p>\n<p>{{link}} στα έργα και τις πρωτοποριακές ιδέες που φιλοξενούμε. Χρειάζονται την βοήθειά σου! \nΞεκίνησε σήμερα να επενδύεις υπεύθυνα και με ασφάλεια.</p>\n<p>Απο την ομάδα της {{coop}}.</p>"
+  },
+  "depositFailedTemplate": {
+    "en": "<p>Your deposit request has been rejected. Try to create new deposit request or contact support for more information.</p>"
+  },
+  "depositNoProjectToInvestTemplate": {
+    "en": "<p>Welcome to {{coop}}, we are very pleased you have joined us. Your deposit has been approved and funds are ready.</p>\n<p>From the {{coop}} team.</p>",
+    "el": "<p>Καλωσόρισες στην {{coop}}. Χαιρόμαστε πολύ που ολοκληρώθηκε η εγγραφή σου. Η κατάθεσή σου έχει εγκριθεί και τα χρήματά σου είναι στο εικονικό σου πορτοφόλι.</p>\n<p>Απο την ομάδα της {{coop}}.</p>"
   },
   "failedDeliveryMessageTemplate": {
     "en": "<p>Mail delivery to the following address(es) failed: {{failedRecipients}}.</p>",
@@ -116,16 +123,28 @@
     "fr": "<p>Vous avez demandé un retrait avec le montant: €{{amount}}.</p>\n<p>Vous serez informé après le traitement de votre demande de retrait.</p>"
   },
   "withdrawTemplate": {
-    "en": "{{#burned}}\n    <p>Your withdraw have been approved and your funds have been transferred to your bank account.</p>\n{{/burned}}\n{{^burned}}\n    <p>Your withdraw request has been rejected. For more information contact support.</p>\n{{/burned}}",
-    "es": "{{#burned}}\n  <p>Su retirada ha sido autorizada y sus fondos se han transferido a su cuenta bancaria.</p>\n {{/burned}}\n {{^burned}}\n  <p>Su solicitud de retirada ha sido rechazada. Para más información, contacte con soporte.</p>\n {{/burned}}",
-    "el": "{{#burned}}\n    <p>Η ανάληψή σου έχει εγκριθεί και τα χρήματά έχουν μεταφερθεί στον τραπεζικό σου λογαριασμό.</p>\n{{/burned}}\n{{^burned}}\n    <p>Το αίτημα ανάληψης απορρίφθηκε. Για περισσότερες πληροφορίες επικοινώνησε μαζί μας.</p>\n{{/burned}}\n",
-    "de": "{{#burned}}\n    <p>Ihre Auszahlung wurde genehmigt und Ihr Geld auf Ihr Bankkonto überwiesen.</p>\n{{/burned}}\n{{^burned}}\n    <p>Ihr Widerrufsantrag wurde abgelehnt. Weitere Informationen erhalten Sie vom Support.</p>\n{{/burned}}",
-    "it": "{{#burned}}\n    <p>Il tuo prelievo è stato approvato e i tuoi fondi sono stati trasferiti sul tuo conto bancario.</p>\n{{/burned}}\n{{^burned}}\n    <p>La tua richiesta di prelievo è stata rifiutata. Per ulteriori informazioni, contatta l'assistenza.</p>\n{{/burned}}",
-    "fr": "{{#burned}}\n    <p>Votre retrait a été approuvé et vos fonds ont été transférés sur votre compte bancaire.</p>\n{{/burned}}\n{{^burned}}\n    <p>Votre demande de retrait a été rejetée. Pour plus d'informations, contactez l'assistance.</p>\n{{/burned}}"
+    "en": "<p>Your withdraw have been approved and your funds have been transferred to your bank account.</p>\n",
+    "es": "<p>Su retirada ha sido autorizada y sus fondos se han transferido a su cuenta bancaria.</p>\n",
+    "el": "<p>Η ανάληψή σου έχει εγκριθεί και τα χρήματά έχουν μεταφερθεί στον τραπεζικό σου λογαριασμό.</p>\n\n",
+    "de": "<p>Ihre Auszahlung wurde genehmigt und Ihr Geld auf Ihr Bankkonto überwiesen.</p>\n",
+    "it": "<p>Il tuo prelievo è stato approvato e i tuoi fondi sono stati trasferiti sul tuo conto bancario.</p>",
+    "fr": "<p>Votre retrait a été approuvé et vos fonds ont été transférés sur votre compte bancaire.</p>\n"
+  },
+  "withdrawFailedTemplate": {
+    "en": "<p>Your withdraw request has been rejected. For more information contact support.</p>",
+    "es": "<p>Su solicitud de retirada ha sido rechazada. Para más información, contacte con soporte.</p>",
+    "el": "<p>Το αίτημα ανάληψης απορρίφθηκε. Για περισσότερες πληροφορίες επικοινώνησε μαζί μας.</p>\n",
+    "de": "<p>Ihr Widerrufsantrag wurde abgelehnt. Weitere Informationen erhalten Sie vom Support.</p>\n",
+    "it": "<p>La tua richiesta di prelievo è stata rifiutata. Per ulteriori informazioni, contatta l'assistenza.</p>",
+    "fr": "<p>Votre demande de retrait a été rejetée. Pour plus d'informations, contactez l'assistance</p>\n"
   },
   "investmentTemplate": {
-    "en": "<p>Thank you for choosing to invest €{{amount}} in {{projectName}}, {{projectDescription}}.</p>\n{{#withTos}}<p>When the target is reached and the final contracts completed your investment will be finalized under the conditions contained in the attached document. This is a copy of the project listing that was on the platform at the time you decided to invest in the project.</p>{{/withTos}}\n<p>If the target is not reached or the investment does not close for some other reason we will notify you so you can cancel your investment and your funds will immediately get transferred back to your wallet.</p>\n\n<p>We will be back in touch with updates on your investment.</p>\n<p>Thank you for joining {{coopName}}.</p>",
-    "el": "<p>Σε ευχαριστούμε που διάλεξες να επενδύσεις {{amount}}€ στην {{projectName}}, {{projectDescription}}.</p>\n{{#withTos}}<p>Όταν επιτευχθεί ο στόχος του έργου και ολοκληρωθούν οι τελικές συμβάσεις, η επένδυσή σου θα οριστικοποιηθεί υπό τους όρους που περιέχονται στο επισυναπτόμενο αρχείο. Πρόκειται για το αντίγραφο της καταχώρισης του έργου στην πλατφόρμα που διάβασες πριν επενδύσεις στο έργο.</p>{{/withTos}}\n<p>Εάν ο στόχος δεν επιτευχθεί ή η επένδυση δεν κλείσει για κάποιο άλλο λόγο, θα σε ενημερώσουμε άμεσα ώστε να ακυρώσεις την επένδυσή σου και να επιστραφεί  το συνολικό ποσό της επένδυσής σου αμέσως στο πορτοφόλι σου.</p>\n\n<p>Σύντομα θα έχεις νέα μας για την εξέλιξη της επένδυσής σου.</p>\n<p>Σε ευχαριστούμε που συμμετέχεις στην {{coopName}}.</p>"
+    "en": "<p>Thank you for choosing to invest €{{amount}} in {{projectName}}, {{projectDescription}}.</p>\n<p>When the target is reached and the final contracts completed your investment will be finalized under the conditions contained in the attached document. This is a copy of the project listing that was on the platform at the time you decided to invest in the project.</p>\n<p>If the target is not reached or the investment does not close for some other reason we will notify you so you can cancel your investment and your funds will immediately get transferred back to your wallet.</p>\n\n<p>We will be back in touch with updates on your investment.</p>\n<p>Thank you for joining {{coop}}.</p>",
+    "el": "<p>Σε ευχαριστούμε που διάλεξες να επενδύσεις {{amount}}€ στην {{projectName}}, {{projectDescription}}.</p>\n<p>Όταν επιτευχθεί ο στόχος του έργου και ολοκληρωθούν οι τελικές συμβάσεις, η επένδυσή σου θα οριστικοποιηθεί υπό τους όρους που περιέχονται στο επισυναπτόμενο αρχείο. Πρόκειται για το αντίγραφο της καταχώρισης του έργου στην πλατφόρμα που διάβασες πριν επενδύσεις στο έργο.</p>\n<p>Εάν ο στόχος δεν επιτευχθεί ή η επένδυση δεν κλείσει για κάποιο άλλο λόγο, θα σε ενημερώσουμε άμεσα ώστε να ακυρώσεις την επένδυσή σου και να επιστραφεί  το συνολικό ποσό της επένδυσής σου αμέσως στο πορτοφόλι σου.</p>\n\n<p>Σύντομα θα έχεις νέα μας για την εξέλιξη της επένδυσής σου.</p>\n<p>Σε ευχαριστούμε που συμμετέχεις στην {{coop}}.</p>"
+  },
+  "investmentWithoutTosTemplate": {
+    "en": "<p>Thank you for choosing to invest €{{amount}} in {{projectName}}, {{projectDescription}}.</p>\n<p>If the target is not reached or the investment does not close for some other reason we will notify you so you can cancel your investment and your funds will immediately get transferred back to your wallet.</p>\n\n<p>We will be back in touch with updates on your investment.</p>\n<p>Thank you for joining {{coop}}.</p>",
+    "el": "<p>Σε ευχαριστούμε που διάλεξες να επενδύσεις {{amount}}€ στην {{projectName}}, {{projectDescription}}.</p>\n\n<p>Εάν ο στόχος δεν επιτευχθεί ή η επένδυση δεν κλείσει για κάποιο άλλο λόγο, θα σε ενημερώσουμε άμεσα ώστε να ακυρώσεις την επένδυσή σου και να επιστραφεί  το συνολικό ποσό της επένδυσής σου αμέσως στο πορτοφόλι σου.</p>\n\n<p>Σύντομα θα έχεις νέα μας για την εξέλιξη της επένδυσής σου.</p>\n<p>Σε ευχαριστούμε που συμμετέχεις στην {{coop}}.</p>"
   },
   "walletActivatedTitle": {
     "en": "Wallet activated",
