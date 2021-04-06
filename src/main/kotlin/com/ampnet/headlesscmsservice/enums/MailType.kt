@@ -88,6 +88,11 @@ enum class MailType(val id: Int, val defaultTemplateKey: String, val defaultTitl
     },
     WITHDRAW_REQUEST_MAIL(20, "withdrawRequestTemplate", "withdrawTitle") {
         override fun getRequiredFields(): List<MailFieldName> = listOf(MailFieldName.AMOUNT)
+    },
+    TOKEN_ISSUER_WITHDRAWAL_REQUEST_MAIL(21, "tokenIssuerWithdrawalTemplate", "newWithdrawTitle") {
+        override fun getRequiredFields(): List<MailFieldName> {
+            return listOf(MailFieldName.FIRST_NAME, MailFieldName.LAST_NAME, MailFieldName.AMOUNT, MailFieldName.LINK)
+        }
     };
 
     companion object {

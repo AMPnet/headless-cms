@@ -10,5 +10,6 @@ enum class MailFieldName(val value: String) {
     FAILED_RECIPIENTS("{{failedRecipients}}"),
     FIRST_NAME("{{firstName}}"),
     PROJECT_DESCRIPTION("{{projectDescription}}"),
-    COOP("{{coop}}");
+    COOP("{{coop}}"),
+    LAST_NAME("{{lastName}}");
 }
