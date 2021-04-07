@@ -51,7 +51,7 @@ enum class MailType(val id: Int, val defaultTemplateKey: String, val defaultTitl
     },
     NEW_USER_WALLET_MAIL(11, "userWalletTemplate", "newWalletTitle") {
         override fun getRequiredFields(): List<MailFieldName> =
-            listOf(MailFieldName.ORGANIZATION, MailFieldName.LINK)
+            listOf(MailFieldName.ACTIVATION_DATA, MailFieldName.ORGANIZATION, MailFieldName.LINK)
     },
     NEW_PROJECT_WALLET_MAIL(12, "projectWalletTemplate", "newWalletTitle") {
         override fun getRequiredFields(): List<MailFieldName> = listOf(MailFieldName.LINK)
