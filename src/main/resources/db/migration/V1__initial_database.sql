@@ -1,5 +1,5 @@
 CREATE TABLE mail (
-    id UUID PRIMARY KEY,
+    uuid UUID PRIMARY KEY,
     coop VARCHAR NOT NULL,
     lang VARCHAR NOT NULL,
     type_id INT NOT NULL,

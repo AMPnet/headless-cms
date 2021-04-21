@@ -18,7 +18,7 @@ class Mail(
 
     @Id
     @Column
-    val id: UUID,
+    val uuid: UUID,
 
     @Column(nullable = false)
     var title: String,

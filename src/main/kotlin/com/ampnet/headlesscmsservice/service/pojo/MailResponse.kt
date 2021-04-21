@@ -15,7 +15,7 @@ data class MailResponse(
     val lang: Lang
 ) {
     constructor(mail: Mail) : this(
-        mail.id,
+        mail.uuid,
         mail.coop,
         mail.title,
         mail.content,

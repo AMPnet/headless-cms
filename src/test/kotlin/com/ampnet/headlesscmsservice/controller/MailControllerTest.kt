@@ -58,7 +58,7 @@ class MailControllerTest : ControllerTestBase() {
             val response: MailListResponse = objectMapper.readValue(result.response.contentAsString)
             assertThat(response.mails).hasSize(1)
             val mail = response.mails.first()
-            assertThat(mail.id).isEqualTo(testContext.mail.id)
+            assertThat(mail.id).isEqualTo(testContext.mail.uuid)
             assertThat(mail.coop).isEqualTo(testContext.mail.coop)
             assertThat(mail.title).isEqualTo(testContext.mail.title)
             assertThat(mail.content).isEqualTo(testContext.mail.content)
