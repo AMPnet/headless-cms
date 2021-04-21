@@ -3,9 +3,10 @@ package com.ampnet.headlesscmsservice.service.pojo
 import com.ampnet.headlesscmsservice.enums.Lang
 import com.ampnet.headlesscmsservice.enums.MailType
 import com.ampnet.headlesscmsservice.persistence.model.Mail
+import java.util.UUID
 
 data class MailResponse(
-    val id: Int?,
+    val uuid: UUID?,
     val coop: String,
     val title: String,
     val content: String,
@@ -14,7 +15,7 @@ data class MailResponse(
     val lang: Lang
 ) {
     constructor(mail: Mail) : this(
-        mail.id,
+        mail.uuid,
         mail.coop,
         mail.title,
         mail.content,

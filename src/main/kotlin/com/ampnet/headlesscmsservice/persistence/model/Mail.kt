@@ -2,6 +2,7 @@ package com.ampnet.headlesscmsservice.persistence.model
 
 import com.ampnet.headlesscmsservice.enums.Lang
 import com.ampnet.headlesscmsservice.enums.MailType
+import java.util.UUID
 import javax.persistence.AttributeConverter
 import javax.persistence.Column
 import javax.persistence.Converter
@@ -16,7 +17,8 @@ import javax.persistence.Table
 class Mail(
 
     @Id
-    val id: Int,
+    @Column
+    val uuid: UUID,
 
     @Column(nullable = false)
     var title: String,
@@ -41,16 +43,10 @@ class Mail(
         type: MailType,
         lang: Lang
     ) : this(
-        MailId(coop, type, lang).hashCode(),
+        UUID.randomUUID(),
         title, content, coop, type, lang
     )
 }
-
-data class MailId(
-    val coop: String,
-    val type: MailType,
-    val lang: Lang
-)
 
 @Converter(autoApply = true)
 class MailTypeConverter : AttributeConverter<MailType, Int> {

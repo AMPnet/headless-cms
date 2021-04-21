@@ -5,7 +5,6 @@ import com.ampnet.headlesscmsservice.enums.Lang
 import com.ampnet.headlesscmsservice.enums.MailType
 import com.ampnet.headlesscmsservice.exception.ErrorCode
 import com.ampnet.headlesscmsservice.persistence.model.Mail
-import com.ampnet.headlesscmsservice.persistence.model.MailId
 import com.ampnet.headlesscmsservice.security.WithMockCrowdfundUser
 import com.ampnet.headlesscmsservice.service.pojo.MailListResponse
 import com.ampnet.headlesscmsservice.service.pojo.MailResponse
@@ -59,7 +58,7 @@ class MailControllerTest : ControllerTestBase() {
             val response: MailListResponse = objectMapper.readValue(result.response.contentAsString)
             assertThat(response.mails).hasSize(1)
             val mail = response.mails.first()
-            assertThat(mail.id).isEqualTo(testContext.mail.id)
+            assertThat(mail.uuid).isEqualTo(testContext.mail.uuid)
             assertThat(mail.coop).isEqualTo(testContext.mail.coop)
             assertThat(mail.title).isEqualTo(testContext.mail.title)
             assertThat(mail.content).isEqualTo(testContext.mail.content)
@@ -111,9 +110,9 @@ class MailControllerTest : ControllerTestBase() {
             assertThat(mails[MailType.RESET_PASSWORD_MAIL]?.content).isEqualTo(testContext.mails.last().content)
             mails.forEach { (type, mail) ->
                 if (type == MailType.INVITATION_MAIL || type == MailType.RESET_PASSWORD_MAIL) {
-                    assertThat(mail.id).isNotNull
+                    assertThat(mail.uuid).isNotNull
                 } else {
-                    assertThat(mail.id).isNull()
+                    assertThat(mail.uuid).isNull()
                 }
             }
         }
@@ -147,7 +146,7 @@ class MailControllerTest : ControllerTestBase() {
             assertThat(response.mails).hasSize(1)
             val mail = response.mails.first()
             val defaultInvitationMail = getDefaultMail(MailType.INVITATION_MAIL, Lang.EN, COOP)
-            assertThat(mail.id).isNull()
+            assertThat(mail.uuid).isNull()
             assertThat(mail.coop).isEqualTo(defaultInvitationMail.coop)
             assertThat(mail.title).isEqualTo(defaultInvitationMail.title)
             assertThat(mail.content).isEqualTo(defaultInvitationMail.content)
@@ -198,7 +197,6 @@ class MailControllerTest : ControllerTestBase() {
                 .andExpect(status().isOk)
                 .andReturn()
             val response: MailResponse = objectMapper.readValue(result.response.contentAsString)
-            assertThat(response.id).isEqualTo(MailId(COOP, MailType.INVITATION_MAIL, Lang.EN).hashCode())
             assertThat(response.coop).isEqualTo(COOP)
             assertThat(response.title).isEqualTo(request.title)
             assertThat(response.content).isEqualTo(request.content)
@@ -208,7 +206,6 @@ class MailControllerTest : ControllerTestBase() {
         }
         verify("Mail is saved in the database") {
             val updatedMail = mailRepository.findByCoopAndOptionalTypeAndOptionalLang(COOP, MailType.INVITATION_MAIL, Lang.EN).first()
-            assertThat(updatedMail.id).isEqualTo(MailId(COOP, MailType.INVITATION_MAIL, Lang.EN).hashCode())
             assertThat(updatedMail.coop).isEqualTo(COOP)
             assertThat(updatedMail.title).isEqualTo(request.title)
             assertThat(updatedMail.content).isEqualTo(request.content)

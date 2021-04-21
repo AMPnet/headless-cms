@@ -7,7 +7,6 @@ import com.ampnet.headlesscmsservice.enums.MailType
 import com.ampnet.headlesscmsservice.exception.ErrorCode
 import com.ampnet.headlesscmsservice.exception.ErrorResponse
 import com.ampnet.headlesscmsservice.persistence.model.Mail
-import com.ampnet.headlesscmsservice.persistence.model.MailId
 import com.ampnet.headlesscmsservice.persistence.respository.MailRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -76,7 +75,7 @@ abstract class ControllerTestBase : TestBase() {
         lang: Lang,
         coop: String = COOP
     ): Mail {
-        val mail = Mail(MailId(coop, type, lang).hashCode(), title, content, coop, type, lang)
+        val mail = Mail(title, content, coop, type, lang)
         return mailRepository.save(mail)
     }
 }
