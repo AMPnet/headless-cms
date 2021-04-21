@@ -58,7 +58,7 @@ class MailControllerTest : ControllerTestBase() {
             val response: MailListResponse = objectMapper.readValue(result.response.contentAsString)
             assertThat(response.mails).hasSize(1)
             val mail = response.mails.first()
-            assertThat(mail.id).isEqualTo(testContext.mail.uuid)
+            assertThat(mail.uuid).isEqualTo(testContext.mail.uuid)
             assertThat(mail.coop).isEqualTo(testContext.mail.coop)
             assertThat(mail.title).isEqualTo(testContext.mail.title)
             assertThat(mail.content).isEqualTo(testContext.mail.content)
@@ -110,9 +110,9 @@ class MailControllerTest : ControllerTestBase() {
             assertThat(mails[MailType.RESET_PASSWORD_MAIL]?.content).isEqualTo(testContext.mails.last().content)
             mails.forEach { (type, mail) ->
                 if (type == MailType.INVITATION_MAIL || type == MailType.RESET_PASSWORD_MAIL) {
-                    assertThat(mail.id).isNotNull
+                    assertThat(mail.uuid).isNotNull
                 } else {
-                    assertThat(mail.id).isNull()
+                    assertThat(mail.uuid).isNull()
                 }
             }
         }
@@ -146,7 +146,7 @@ class MailControllerTest : ControllerTestBase() {
             assertThat(response.mails).hasSize(1)
             val mail = response.mails.first()
             val defaultInvitationMail = getDefaultMail(MailType.INVITATION_MAIL, Lang.EN, COOP)
-            assertThat(mail.id).isNull()
+            assertThat(mail.uuid).isNull()
             assertThat(mail.coop).isEqualTo(defaultInvitationMail.coop)
             assertThat(mail.title).isEqualTo(defaultInvitationMail.title)
             assertThat(mail.content).isEqualTo(defaultInvitationMail.content)

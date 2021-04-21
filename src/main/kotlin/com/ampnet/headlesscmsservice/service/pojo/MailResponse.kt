@@ -6,7 +6,7 @@ import com.ampnet.headlesscmsservice.persistence.model.Mail
 import java.util.UUID
 
 data class MailResponse(
-    val id: UUID?,
+    val uuid: UUID?,
     val coop: String,
     val title: String,
     val content: String,
