@@ -5,7 +5,6 @@ import com.ampnet.headlesscmsservice.enums.Lang
 import com.ampnet.headlesscmsservice.enums.MailType
 import com.ampnet.headlesscmsservice.exception.ErrorCode
 import com.ampnet.headlesscmsservice.persistence.model.Mail
-import com.ampnet.headlesscmsservice.persistence.model.MailId
 import com.ampnet.headlesscmsservice.security.WithMockCrowdfundUser
 import com.ampnet.headlesscmsservice.service.pojo.MailListResponse
 import com.ampnet.headlesscmsservice.service.pojo.MailResponse
@@ -198,7 +197,6 @@ class MailControllerTest : ControllerTestBase() {
                 .andExpect(status().isOk)
                 .andReturn()
             val response: MailResponse = objectMapper.readValue(result.response.contentAsString)
-            assertThat(response.id).isEqualTo(MailId(COOP, MailType.INVITATION_MAIL, Lang.EN).hashCode())
             assertThat(response.coop).isEqualTo(COOP)
             assertThat(response.title).isEqualTo(request.title)
             assertThat(response.content).isEqualTo(request.content)
@@ -208,7 +206,6 @@ class MailControllerTest : ControllerTestBase() {
         }
         verify("Mail is saved in the database") {
             val updatedMail = mailRepository.findByCoopAndOptionalTypeAndOptionalLang(COOP, MailType.INVITATION_MAIL, Lang.EN).first()
-            assertThat(updatedMail.id).isEqualTo(MailId(COOP, MailType.INVITATION_MAIL, Lang.EN).hashCode())
             assertThat(updatedMail.coop).isEqualTo(COOP)
             assertThat(updatedMail.title).isEqualTo(request.title)
             assertThat(updatedMail.content).isEqualTo(request.content)
