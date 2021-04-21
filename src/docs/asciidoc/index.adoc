@@ -23,7 +23,7 @@ If `lang` is not specified returns mails in all languages.
 
 If both `type` and `lang` are not specified returns all mails in all languages.
 
-TIP: If default mail value is returned `id` is null.
+TIP: `uuid` is null for the default mail content.
 
 .Request
 include::{snippets}/MailControllerTest/mustBeAbleToGetMail/http-request.adoc[]
