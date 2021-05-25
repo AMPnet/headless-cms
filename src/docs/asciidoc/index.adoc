@@ -37,3 +37,28 @@ Request needs header: `Authorization: Bearer JWT`.
 include::{snippets}/MailControllerTest/mustBeAbleUpdateMail/http-request.adoc[]
 .Response
 include::{snippets}/MailControllerTest/mustBeAbleUpdateMail/http-response.adoc[]
+
+== Text API
+
+=== Get Text
+Query parameters `key` and `lang` are both optional.
+
+If `key` is not specified returns all texts by language.
+
+If `lang` is not specified returns text in all languages.
+
+If both `key` and `lang` are not specified returns all texts in all languages.
+
+.Request
+include::{snippets}/TextControllerTest/mustBeAbleToGetText/http-request.adoc[]
+.Response
+include::{snippets}/TextControllerTest/mustBeAbleToGetText/http-response.adoc[]
+
+=== Update Text
+Request needs header: `Authorization: Bearer JWT`.
+
+.Request
+include::{snippets}/TextControllerTest/mustBeAbleUpdateText/http-request.adoc[]
+.Response
+include::{snippets}/TextControllerTest/mustBeAbleUpdateText/http-response.adoc[]
+

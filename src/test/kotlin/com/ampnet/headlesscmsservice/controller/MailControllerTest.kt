@@ -50,8 +50,8 @@ class MailControllerTest : ControllerTestBase() {
         verify("Controller will return mail for coop, type and lang") {
             val result = mockMvc.perform(
                 get("/mail/$COOP")
-                    .param("type", MailType.INVITATION_MAIL.toString())
-                    .param("lang", Lang.EN.toString())
+                    .param("type", MailType.INVITATION_MAIL.toString().toLowerCase())
+                    .param("lang", Lang.EN.toString().toLowerCase())
             )
                 .andExpect(status().isOk)
                 .andReturn()
@@ -188,9 +188,12 @@ class MailControllerTest : ControllerTestBase() {
     @WithMockCrowdfundUser
     fun mustBeAbleUpdateMail() {
         val request = MailUpdateRequest("Invitation New Title", invitationMailContent)
-        verify("Controller will return default email") {
+        verify("Controller will return updated mail") {
             val result = mockMvc.perform(
-                post("/mail/$COOP/${MailType.INVITATION_MAIL}/${Lang.EN}")
+                post(
+                    "/mail/$COOP/${MailType.INVITATION_MAIL.toString().toLowerCase()}" +
+                        "/${Lang.EN.toString().toLowerCase()}"
+                )
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )

@@ -1,0 +1,7 @@
+CREATE TABLE text (
+    uuid UUID PRIMARY KEY,
+    text VARCHAR NOT NULL,
+    coop VARCHAR NOT NULL,
+    key VARCHAR NOT NULL,
+    lang VARCHAR NOT NULL
+);

@@ -11,4 +11,9 @@ class DatabaseCleanerService(val em: EntityManager) {
     fun deleteAllEmails() {
         em.createNativeQuery("TRUNCATE mail CASCADE").executeUpdate()
     }
+
+    @Transactional
+    fun deleteAllTexts() {
+        em.createNativeQuery("TRUNCATE text CASCADE").executeUpdate()
+    }
 }
