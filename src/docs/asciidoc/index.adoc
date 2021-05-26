@@ -57,6 +57,9 @@ include::{snippets}/ContentControllerTest/mustBeAbleToGetContent/http-response.a
 === Update Content
 Request needs header: `Authorization: Bearer JWT`. Must have the privilege - `PWA_COOP`.
 
+TIP: If there is no `content` for `coop`, `key` and `lang` provided a new content entry gets added to the database.
+
+
 .Request
 include::{snippets}/ContentControllerTest/mustBeAbleUpdateContent/http-request.adoc[]
 .Response
