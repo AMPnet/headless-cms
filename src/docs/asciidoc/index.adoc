@@ -31,7 +31,7 @@ include::{snippets}/MailControllerTest/mustBeAbleToGetMail/http-request.adoc[]
 include::{snippets}/MailControllerTest/mustBeAbleToGetMail/http-response.adoc[]
 
 === Update Mail
-Request needs header: `Authorization: Bearer JWT`.
+Request needs header: `Authorization: Bearer JWT`. Must have the privilege - `PWA_COOP`.
 
 .Request
 include::{snippets}/MailControllerTest/mustBeAbleUpdateMail/http-request.adoc[]
@@ -55,7 +55,7 @@ include::{snippets}/ContentControllerTest/mustBeAbleToGetContent/http-request.ad
 include::{snippets}/ContentControllerTest/mustBeAbleToGetContent/http-response.adoc[]
 
 === Update Content
-Request needs header: `Authorization: Bearer JWT`.
+Request needs header: `Authorization: Bearer JWT`. Must have the privilege - `PWA_COOP`.
 
 .Request
 include::{snippets}/ContentControllerTest/mustBeAbleUpdateContent/http-request.adoc[]

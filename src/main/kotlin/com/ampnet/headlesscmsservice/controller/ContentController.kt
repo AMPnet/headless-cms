@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class TextController(private val contentService: ContentService) {
+class ContentController(private val contentService: ContentService) {
 
     companion object : KLogging()
 
     @GetMapping("/text/{coop}")
-    fun getText(
+    fun getContent(
         @PathVariable coop: String,
         @RequestParam(required = false) key: String?,
         @RequestParam(required = false) lang: String?
@@ -38,7 +38,7 @@ class TextController(private val contentService: ContentService) {
 
     @PostMapping("/text/{coop}/{key}/{lang}")
     @PreAuthorize("hasAuthority(T(com.ampnet.headlesscmsservice.enums.PrivilegeType).PWA_COOP)")
-    fun updateText(
+    fun updateContent(
         @PathVariable coop: String,
         @PathVariable key: String,
         @PathVariable lang: String,
