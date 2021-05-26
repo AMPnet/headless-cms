@@ -3,7 +3,7 @@ package com.ampnet.headlesscmsservice.controller
 import com.ampnet.headlesscmsservice.controller.pojo.MailUpdateRequest
 import com.ampnet.headlesscmsservice.enums.Lang
 import com.ampnet.headlesscmsservice.enums.MailType
-import com.ampnet.headlesscmsservice.enums.name
+import com.ampnet.headlesscmsservice.enums.lowerCaseName
 import com.ampnet.headlesscmsservice.exception.ErrorCode
 import com.ampnet.headlesscmsservice.persistence.model.Mail
 import com.ampnet.headlesscmsservice.security.WithMockCrowdfundUser
@@ -51,8 +51,8 @@ class MailControllerTest : ControllerTestBase() {
         verify("Controller will return mail for coop, type and lang") {
             val result = mockMvc.perform(
                 get("/mail/$COOP")
-                    .param("type", MailType.INVITATION_MAIL.name())
-                    .param("lang", Lang.EN.name())
+                    .param("type", MailType.INVITATION_MAIL.lowerCaseName())
+                    .param("lang", Lang.EN.lowerCaseName())
             )
                 .andExpect(status().isOk)
                 .andReturn()
@@ -76,7 +76,7 @@ class MailControllerTest : ControllerTestBase() {
         verify("Controller will return all mails by language") {
             val result = mockMvc.perform(
                 get("/mail/$COOP")
-                    .param("lang", Lang.EN.name())
+                    .param("lang", Lang.EN.lowerCaseName())
             )
                 .andExpect(status().isOk)
                 .andReturn()
@@ -100,7 +100,7 @@ class MailControllerTest : ControllerTestBase() {
         verify("Controller will return mails by language") {
             val result = mockMvc.perform(
                 get("/mail/$COOP")
-                    .param("lang", Lang.EN.name())
+                    .param("lang", Lang.EN.lowerCaseName())
             )
                 .andExpect(status().isOk)
                 .andReturn()
@@ -124,7 +124,7 @@ class MailControllerTest : ControllerTestBase() {
         verify("Controller will return mail all mails by language") {
             val result = mockMvc.perform(
                 get("/mail/$COOP")
-                    .param("type", MailType.INVITATION_MAIL.name())
+                    .param("type", MailType.INVITATION_MAIL.lowerCaseName())
             )
                 .andExpect(status().isOk)
                 .andReturn()
@@ -138,8 +138,8 @@ class MailControllerTest : ControllerTestBase() {
         verify("Controller will return default email") {
             val result = mockMvc.perform(
                 get("/mail/$COOP")
-                    .param("type", MailType.INVITATION_MAIL.name())
-                    .param("lang", Lang.EN.name())
+                    .param("type", MailType.INVITATION_MAIL.lowerCaseName())
+                    .param("lang", Lang.EN.lowerCaseName())
             )
                 .andExpect(status().isOk)
                 .andReturn()
@@ -192,8 +192,8 @@ class MailControllerTest : ControllerTestBase() {
         verify("Controller will return updated mail") {
             val result = mockMvc.perform(
                 post(
-                    "/mail/$COOP/${MailType.INVITATION_MAIL.name()}" +
-                        "/${Lang.EN.name()}"
+                    "/mail/$COOP/${MailType.INVITATION_MAIL.lowerCaseName()}" +
+                        "/${Lang.EN.lowerCaseName()}"
                 )
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -224,7 +224,7 @@ class MailControllerTest : ControllerTestBase() {
         verify("Controller will return bad request") {
             val request = MailUpdateRequest("Invitation New Title", invitationMailContent)
             val result = mockMvc.perform(
-                post("/mail/$COOP/${MailType.INVITATION_MAIL.name()}/${Lang.EN.name()}")
+                post("/mail/$COOP/${MailType.INVITATION_MAIL.lowerCaseName()}/${Lang.EN.lowerCaseName()}")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -235,8 +235,8 @@ class MailControllerTest : ControllerTestBase() {
     }
 
     private fun getDefaultMail(mailType: MailType, lang: Lang, coop: String): MailResponse {
-        val content = translations[mailType.defaultTemplateKey]?.get(lang.name()) ?: fail("no default content")
-        val title = translations[mailType.defaultTitleKey]?.get(lang.name()) ?: fail("no default title")
+        val content = translations[mailType.defaultTemplateKey]?.get(lang.lowerCaseName()) ?: fail("no default content")
+        val title = translations[mailType.defaultTitleKey]?.get(lang.lowerCaseName()) ?: fail("no default title")
         return MailResponse(null, coop, title, content, mailType, mailType.getRequiredFields().map { it.value }, lang)
     }
 
