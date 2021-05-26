@@ -1,6 +1,6 @@
 package com.ampnet.headlesscmsservice.service.pojo
 
-class TextUpdateServiceRequest(
+class ContentUpdateServiceRequest(
     val coop: String,
     val key: String,
     val lang: String,

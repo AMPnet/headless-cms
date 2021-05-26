@@ -38,27 +38,27 @@ include::{snippets}/MailControllerTest/mustBeAbleUpdateMail/http-request.adoc[]
 .Response
 include::{snippets}/MailControllerTest/mustBeAbleUpdateMail/http-response.adoc[]
 
-== Text API
+== Content API
 
-=== Get Text
+=== Get Content
 Query parameters `key` and `lang` are both optional.
 
-If `key` is not specified returns all texts by language.
+If `key` is not specified returns all content by language.
 
-If `lang` is not specified returns text in all languages.
+If `lang` is not specified returns content in all languages.
 
-If both `key` and `lang` are not specified returns all texts in all languages.
+If both `key` and `lang` are not specified returns all content in all languages.
 
 .Request
-include::{snippets}/TextControllerTest/mustBeAbleToGetText/http-request.adoc[]
+include::{snippets}/ContentControllerTest/mustBeAbleToGetContent/http-request.adoc[]
 .Response
-include::{snippets}/TextControllerTest/mustBeAbleToGetText/http-response.adoc[]
+include::{snippets}/ContentControllerTest/mustBeAbleToGetContent/http-response.adoc[]
 
-=== Update Text
+=== Update Content
 Request needs header: `Authorization: Bearer JWT`.
 
 .Request
-include::{snippets}/TextControllerTest/mustBeAbleUpdateText/http-request.adoc[]
+include::{snippets}/ContentControllerTest/mustBeAbleUpdateContent/http-request.adoc[]
 .Response
-include::{snippets}/TextControllerTest/mustBeAbleUpdateText/http-response.adoc[]
+include::{snippets}/ContentControllerTest/mustBeAbleUpdateContent/http-response.adoc[]
 

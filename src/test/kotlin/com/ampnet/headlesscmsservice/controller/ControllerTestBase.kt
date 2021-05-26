@@ -6,10 +6,10 @@ import com.ampnet.headlesscmsservice.enums.Lang
 import com.ampnet.headlesscmsservice.enums.MailType
 import com.ampnet.headlesscmsservice.exception.ErrorCode
 import com.ampnet.headlesscmsservice.exception.ErrorResponse
+import com.ampnet.headlesscmsservice.persistence.model.Content
 import com.ampnet.headlesscmsservice.persistence.model.Mail
-import com.ampnet.headlesscmsservice.persistence.model.Text
+import com.ampnet.headlesscmsservice.persistence.respository.ContentRepository
 import com.ampnet.headlesscmsservice.persistence.respository.MailRepository
-import com.ampnet.headlesscmsservice.persistence.respository.TextRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.jupiter.api.BeforeEach
@@ -45,7 +45,7 @@ abstract class ControllerTestBase : TestBase() {
     protected lateinit var mailRepository: MailRepository
 
     @Autowired
-    protected lateinit var textRepository: TextRepository
+    protected lateinit var contentRepository: ContentRepository
 
     protected lateinit var mockMvc: MockMvc
 
@@ -77,6 +77,6 @@ abstract class ControllerTestBase : TestBase() {
     protected fun createMail(title: String, content: String, type: MailType, lang: Lang, coop: String = COOP): Mail =
         mailRepository.save(Mail(title, content, coop, type, lang))
 
-    protected fun createText(text: String, key: String, lang: String, coop: String = COOP): Text =
-        textRepository.save(Text(UUID.randomUUID(), text, coop, key, lang))
+    protected fun createContent(text: String, key: String, lang: String, coop: String = COOP): Content =
+        contentRepository.save(Content(UUID.randomUUID(), text, coop, key, lang))
 }

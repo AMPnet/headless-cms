@@ -7,8 +7,8 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "text")
-class Text(
+@Table(name = "content")
+class Content(
 
     @Id
     @Column

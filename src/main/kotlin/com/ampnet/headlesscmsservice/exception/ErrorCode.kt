@@ -12,5 +12,5 @@ enum class ErrorCode(val categoryCode: String, var specificCode: String, var mes
     CMS_REQUIRED_FIELD_MISSING("12", "01", "Required field in mail is missing"),
     CMS_MAIL_TYPE_UNDEFINED("12", "02", "Mail type is not defined"),
     CMS_LANGUAGE_UNDEFINED("12", "03", "Language is not defined"),
-    CMS_TEXT_NOT_FOUND("12", "04", "Text is not found"),
+    CMS_CONTENT_NOT_FOUND("12", "04", "Content is not found"),
 }

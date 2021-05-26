@@ -1,12 +1,12 @@
 package com.ampnet.headlesscmsservice.controller
 
-import com.ampnet.headlesscmsservice.controller.pojo.TextUpdateRequest
+import com.ampnet.headlesscmsservice.controller.pojo.ContentUpdateRequest
 import com.ampnet.headlesscmsservice.exception.ErrorCode
 import com.ampnet.headlesscmsservice.exception.InvalidRequestException
-import com.ampnet.headlesscmsservice.service.TextService
-import com.ampnet.headlesscmsservice.service.pojo.TextListResponse
-import com.ampnet.headlesscmsservice.service.pojo.TextResponse
-import com.ampnet.headlesscmsservice.service.pojo.TextUpdateServiceRequest
+import com.ampnet.headlesscmsservice.service.ContentService
+import com.ampnet.headlesscmsservice.service.pojo.ContentListResponse
+import com.ampnet.headlesscmsservice.service.pojo.ContentResponse
+import com.ampnet.headlesscmsservice.service.pojo.ContentUpdateServiceRequest
 import mu.KLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class TextController(private val textService: TextService) {
+class TextController(private val contentService: ContentService) {
 
     companion object : KLogging()
 
@@ -27,12 +27,12 @@ class TextController(private val textService: TextService) {
         @PathVariable coop: String,
         @RequestParam(required = false) key: String?,
         @RequestParam(required = false) lang: String?
-    ): ResponseEntity<TextListResponse> {
+    ): ResponseEntity<ContentListResponse> {
         logger.debug {
             "Received request to get ${key ?: "all texts"} " +
                 "in ${lang ?: "all languages"} for coop: $coop"
         }
-        val text = textService.findByCoop(coop, key, lang)
+        val text = contentService.findByCoop(coop, key, lang)
         return ResponseEntity.ok(text)
     }
 
@@ -42,8 +42,8 @@ class TextController(private val textService: TextService) {
         @PathVariable coop: String,
         @PathVariable key: String,
         @PathVariable lang: String,
-        @RequestBody request: TextUpdateRequest
-    ): ResponseEntity<TextResponse> {
+        @RequestBody request: ContentUpdateRequest
+    ): ResponseEntity<ContentResponse> {
         logger.debug { "Received request to update $key in $lang for coop: $coop" }
         val userPrincipal = ControllerUtils.getUserPrincipalFromSecurityContext()
         if (userPrincipal.coop != coop)
@@ -51,10 +51,10 @@ class TextController(private val textService: TextService) {
                 ErrorCode.USER_MISSING_PRIVILEGE,
                 "${userPrincipal.uuid} is not a member of this coop: $coop"
             )
-        val serviceRequest = TextUpdateServiceRequest(
+        val serviceRequest = ContentUpdateServiceRequest(
             coop, key, lang, request.text
         )
-        val updatedText = textService.updateText(serviceRequest)
+        val updatedText = contentService.updateContent(serviceRequest)
         return ResponseEntity.ok(updatedText)
     }
 }

@@ -1,5 +1,5 @@
 package com.ampnet.headlesscmsservice.controller.pojo
 
-data class TextUpdateRequest(
+data class ContentUpdateRequest(
     val text: String
 )
