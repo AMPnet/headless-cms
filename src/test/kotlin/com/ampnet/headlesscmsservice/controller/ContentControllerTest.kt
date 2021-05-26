@@ -19,6 +19,9 @@ class ContentControllerTest : ControllerTestBase() {
 
     private lateinit var testContext: TestContext
 
+    private val key = "content_key"
+    private val lang = "en"
+
     @BeforeEach
     fun init() {
         databaseCleanerService.deleteAllContent()
@@ -81,6 +84,33 @@ class ContentControllerTest : ControllerTestBase() {
             assertThat(updatedText.coop).isEqualTo(testContext.content.coop)
             assertThat(updatedText.key).isEqualTo(testContext.content.key)
             assertThat(updatedText.lang).isEqualTo(testContext.content.lang)
+            assertThat(updatedText.text).isEqualTo(testContext.contentUpdateRequest.text)
+        }
+    }
+
+    @Test
+    @WithMockCrowdfundUser
+    fun mustBeAbleToSaveContentIfItDoesNotExist() {
+        verify("Controller will return saved content") {
+            testContext.contentUpdateRequest = ContentUpdateRequest("Some text")
+            val result = mockMvc.perform(
+                post("/text/$COOP/$key/$lang")
+                    .content(objectMapper.writeValueAsString(testContext.contentUpdateRequest))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                .andExpect(status().isOk)
+                .andReturn()
+            val content: ContentResponse = objectMapper.readValue(result.response.contentAsString)
+            assertThat(content.coop).isEqualTo(COOP)
+            assertThat(content.key).isEqualTo(key)
+            assertThat(content.lang).isEqualTo(lang)
+            assertThat(content.text).isEqualTo(testContext.contentUpdateRequest.text)
+        }
+        verify("Content is saved in the database") {
+            val updatedText = contentRepository.findByCoopAndOptionalKeyAndOptionalLang(COOP, key, lang).first()
+            assertThat(updatedText.coop).isEqualTo(COOP)
+            assertThat(updatedText.key).isEqualTo(key)
+            assertThat(updatedText.lang).isEqualTo(lang)
             assertThat(updatedText.text).isEqualTo(testContext.contentUpdateRequest.text)
         }
     }
