@@ -1,9 +1,10 @@
-package com.ampnet.headlesscmsservice.service
+package com.ampnet.headlesscmsservice.service.impl
 
 import com.ampnet.headlesscmsservice.exception.ErrorCode
 import com.ampnet.headlesscmsservice.exception.ResourceNotFoundException
 import com.ampnet.headlesscmsservice.persistence.model.Content
 import com.ampnet.headlesscmsservice.persistence.respository.ContentRepository
+import com.ampnet.headlesscmsservice.service.ContentService
 import com.ampnet.headlesscmsservice.service.pojo.ContentListResponse
 import com.ampnet.headlesscmsservice.service.pojo.ContentResponse
 import com.ampnet.headlesscmsservice.service.pojo.ContentUpdateServiceRequest
@@ -15,10 +16,10 @@ import java.util.UUID
 class ContentServiceImpl(private val contentRepository: ContentRepository) : ContentService {
 
     @Transactional(readOnly = true)
-    override fun findByCoop(coop: String, key: String?, languge: String?): ContentListResponse {
-        val texts = contentRepository.findByCoopAndOptionalKeyAndOptionalLang(coop, key, languge)
+    override fun findByCoop(coop: String, key: String?, language: String?): ContentListResponse {
+        val texts = contentRepository.findByCoopAndOptionalKeyAndOptionalLang(coop, key, language)
         if (texts.isEmpty()) throw ResourceNotFoundException(
-            ErrorCode.CMS_CONTENT_NOT_FOUND, "Text for $key in $languge for $coop not found"
+            ErrorCode.CMS_CONTENT_NOT_FOUND, "Text for $key in $language for $coop not found"
         )
         return ContentListResponse(texts.map { ContentResponse(it) })
     }
