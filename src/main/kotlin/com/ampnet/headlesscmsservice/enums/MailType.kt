@@ -102,3 +102,5 @@ enum class MailType(val id: Int, val defaultTemplateKey: String, val defaultTitl
 
     abstract fun getRequiredFields(): List<MailFieldName>
 }
+
+fun MailType.lowerCaseName() = this.name.toLowerCase()

@@ -31,9 +31,36 @@ include::{snippets}/MailControllerTest/mustBeAbleToGetMail/http-request.adoc[]
 include::{snippets}/MailControllerTest/mustBeAbleToGetMail/http-response.adoc[]
 
 === Update Mail
-Request needs header: `Authorization: Bearer JWT`.
+Request needs header: `Authorization: Bearer JWT`. Must have the privilege - `PWA_COOP`.
 
 .Request
 include::{snippets}/MailControllerTest/mustBeAbleUpdateMail/http-request.adoc[]
 .Response
 include::{snippets}/MailControllerTest/mustBeAbleUpdateMail/http-response.adoc[]
+
+== Content API
+
+=== Get Content
+Query parameters `key` and `lang` are both optional.
+
+If `key` is not specified returns all content by language.
+
+If `lang` is not specified returns content in all languages.
+
+If both `key` and `lang` are not specified returns all content in all languages.
+
+.Request
+include::{snippets}/ContentControllerTest/mustBeAbleToGetContent/http-request.adoc[]
+.Response
+include::{snippets}/ContentControllerTest/mustBeAbleToGetContent/http-response.adoc[]
+
+=== Update Content
+Request needs header: `Authorization: Bearer JWT`. Must have the privilege - `PWA_COOP`.
+
+TIP: If there is no `content` for `coop`, `key` and `lang` provided a new content entry gets added to the database.
+
+.Request
+include::{snippets}/ContentControllerTest/mustBeAbleUpdateContent/http-request.adoc[]
+.Response
+include::{snippets}/ContentControllerTest/mustBeAbleUpdateContent/http-response.adoc[]
+
