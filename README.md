@@ -1,5 +1,7 @@
 # Headless Cms Service
 
+[![Release](https://github.com/AMPnet/headless-cms/actions/workflows/gradle-release.yml/badge.svg?branch=master)](https://github.com/AMPnet/headless-cms/actions/workflows/gradle-release.yml) [![codecov](https://codecov.io/gh/AMPnet/headless-cms/branch/master/graph/badge.svg?token=irz7LiqAK4)](https://codecov.io/gh/AMPnet/headless-cms)
+
 Headless cms service is a part of the AMPnet crowdfunding project.
 
 ## Requirements
