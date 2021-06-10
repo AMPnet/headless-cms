@@ -64,3 +64,11 @@ include::{snippets}/ContentControllerTest/mustBeAbleUpdateContent/http-request.a
 .Response
 include::{snippets}/ContentControllerTest/mustBeAbleUpdateContent/http-response.adoc[]
 
+=== Delete Content
+Request needs header: `Authorization: Bearer JWT`. Must have the privilege - `PWA_COOP`.
+
+.Request
+include::{snippets}/ContentControllerTest/mustBeAbleToDeleteContent/http-request.adoc[]
+.Response
+include::{snippets}/ContentControllerTest/mustBeAbleToDeleteContent/http-response.adoc[]
+

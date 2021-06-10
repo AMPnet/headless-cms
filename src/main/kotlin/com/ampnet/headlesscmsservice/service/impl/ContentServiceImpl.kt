@@ -19,14 +19,14 @@ class ContentServiceImpl(private val contentRepository: ContentRepository) : Con
     override fun findByCoop(coop: String, key: String?, language: String?): ContentListResponse {
         val texts = contentRepository.findByCoopAndOptionalKeyAndOptionalLang(coop, key, language)
         if (texts.isEmpty()) throw ResourceNotFoundException(
-            ErrorCode.CMS_CONTENT_NOT_FOUND, "Text for $key in $language for $coop not found"
+            ErrorCode.CMS_CONTENT_NOT_FOUND, "Content for $key in $language for $coop not found"
         )
         return ContentListResponse(texts.map { ContentResponse(it) })
     }
 
     @Transactional
     override fun updateContent(request: ContentUpdateServiceRequest): ContentResponse {
-        val text = contentRepository.findByCoopAndOptionalKeyAndOptionalLang(
+        val content = contentRepository.findByCoopAndOptionalKeyAndOptionalLang(
             request.coop, request.key, request.lang
         ).firstOrNull() ?: run {
             val text = contentRepository.save(
@@ -34,7 +34,16 @@ class ContentServiceImpl(private val contentRepository: ContentRepository) : Con
             )
             return ContentResponse(text)
         }
-        text.text = request.text
-        return ContentResponse(text)
+        content.text = request.text
+        return ContentResponse(content)
+    }
+
+    @Transactional
+    override fun deleteContent(coop: String, key: String, language: String) {
+        val content = contentRepository.findByCoopAndOptionalKeyAndOptionalLang(coop, key, language)
+            .firstOrNull() ?: throw ResourceNotFoundException(
+            ErrorCode.CMS_CONTENT_NOT_FOUND, "Content for $key in $language for $coop not found"
+        )
+        contentRepository.deleteById(content.uuid)
     }
 }
