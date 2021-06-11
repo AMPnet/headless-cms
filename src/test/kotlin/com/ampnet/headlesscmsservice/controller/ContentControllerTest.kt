@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -115,13 +116,61 @@ class ContentControllerTest : ControllerTestBase() {
 
     @Test
     @WithMockCrowdfundUser(coop = "another-coop")
-    fun mustThrowExceptionIfAdminIsFromAnotherCoop() {
+    fun mustThrowExceptionIfAdminIsFromAnotherCoopOnUpdateContent() {
         val request = ContentUpdateRequest("Updated text")
         verify("Controller will return bad request") {
             val result = mockMvc.perform(
                 post("/text/$COOP/key/en")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
+            )
+                .andExpect(status().isBadRequest)
+                .andReturn()
+            verifyResponseErrorCode(result, ErrorCode.USER_MISSING_PRIVILEGE)
+        }
+    }
+
+    @Test
+    @WithMockCrowdfundUser
+    fun mustBeAbleToDeleteContent() {
+        suppose("Content exists") {
+            testContext.content = createContent("New Text", key, lang, COOP)
+        }
+
+        verify("Controller will delete content") {
+            mockMvc.perform(
+                delete("/text/$COOP/$key/$lang")
+            )
+                .andExpect(status().isOk)
+                .andReturn()
+        }
+        verify("Content is deleted") {
+            val content = contentRepository.findByCoopAndOptionalKeyAndOptionalLang(
+                COOP, key, lang
+            ).firstOrNull()
+            assertThat(content).isNull()
+        }
+    }
+
+    @Test
+    @WithMockCrowdfundUser
+    fun mustThrowExceptionIfContentIsNotFound() {
+        verify("Controller will return not found") {
+            val result = mockMvc.perform(
+                delete("/text/$COOP/$key/$lang")
+            )
+                .andExpect(status().isNotFound)
+                .andReturn()
+            verifyResponseErrorCode(result, ErrorCode.CMS_CONTENT_NOT_FOUND)
+        }
+    }
+
+    @Test
+    @WithMockCrowdfundUser(coop = "another-coop")
+    fun mustThrowExceptionIfAdminIsFromAnotherCoopOnDeleteContent() {
+        verify("Controller will return bad request") {
+            val result = mockMvc.perform(
+                delete("/text/$COOP/key/en")
             )
                 .andExpect(status().isBadRequest)
                 .andReturn()

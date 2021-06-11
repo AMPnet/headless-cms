@@ -1,5 +1,6 @@
 package com.ampnet.headlesscmsservice.controller
 
+import com.ampnet.core.jwt.UserPrincipal
 import com.ampnet.headlesscmsservice.controller.pojo.ContentUpdateRequest
 import com.ampnet.headlesscmsservice.exception.ErrorCode
 import com.ampnet.headlesscmsservice.exception.InvalidRequestException
@@ -10,6 +11,7 @@ import com.ampnet.headlesscmsservice.service.pojo.ContentUpdateServiceRequest
 import mu.KLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -46,15 +48,33 @@ class ContentController(private val contentService: ContentService) {
     ): ResponseEntity<ContentResponse> {
         logger.debug { "Received request to update $key in $lang for coop: $coop" }
         val userPrincipal = ControllerUtils.getUserPrincipalFromSecurityContext()
-        if (userPrincipal.coop != coop)
-            throw InvalidRequestException(
-                ErrorCode.USER_MISSING_PRIVILEGE,
-                "${userPrincipal.uuid} is not a member of this coop: $coop"
-            )
+        throwExceptionIfUserIsMissingPrivilege(userPrincipal, coop)
         val serviceRequest = ContentUpdateServiceRequest(
             coop, key, lang, request.text
         )
         val updatedText = contentService.updateContent(serviceRequest)
         return ResponseEntity.ok(updatedText)
+    }
+
+    @DeleteMapping("/text/{coop}/{key}/{lang}")
+    @PreAuthorize("hasAuthority(T(com.ampnet.headlesscmsservice.enums.PrivilegeType).PWA_COOP)")
+    fun deleteContent(
+        @PathVariable coop: String,
+        @PathVariable key: String,
+        @PathVariable lang: String,
+    ): ResponseEntity<Unit> {
+        logger.debug { "Received request to delete content by $key in $lang for coop: $coop" }
+        val userPrincipal = ControllerUtils.getUserPrincipalFromSecurityContext()
+        throwExceptionIfUserIsMissingPrivilege(userPrincipal, coop)
+        contentService.deleteContent(coop, key, lang)
+        return ResponseEntity.ok().build()
+    }
+
+    private fun throwExceptionIfUserIsMissingPrivilege(userPrincipal: UserPrincipal, coop: String) {
+        if (userPrincipal.coop != coop)
+            throw InvalidRequestException(
+                ErrorCode.USER_MISSING_PRIVILEGE,
+                "${userPrincipal.uuid} is not a member of this coop: $coop"
+            )
     }
 }
